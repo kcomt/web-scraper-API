@@ -6,7 +6,6 @@ class ScraperService {
     this.scrapeList = this.scrapeList.bind(this);
     this.scrapeObject = this.scrapeObject.bind(this);
     this.scrapeText = this.scrapeText.bind(this);
-    this.scrapeSimpleText = this.scrapeSimpleText.bind(this);
     this.scrapeImage = this.scrapeImage.bind(this);
     this.scrapeNodeText = this.scrapeNodeText.bind(this);
   }
@@ -15,15 +14,17 @@ class ScraperService {
     let selector = [];
     $(base).each((index, element) => {
       if (bool) {
-        console.log("index", index, objSelector, $(element).html());
+        //console.log("index", index, base, objSelector, $(element).html());
         $(element).each((index2) => {
-          console.log("index2", $(element).text());
+          //console.log("index2", $(element).text());
         });
       }
 
       let obj = {};
       let selectorInfo = objSelector;
       if (selectorInfo.type === "text") {
+        //console.log("goes here 1", $(element));
+
         obj = this.scrapeText($, element);
       } else if (selectorInfo.type === "img") {
         obj = this.scrapeImage(
@@ -40,9 +41,17 @@ class ScraperService {
           selectorInfo.selectors
         );
       } else if (selectorInfo.type === "list") {
+        console.log(
+          "index: ",
+          index,
+          " selectorInfo.base: ",
+          selectorInfo.base
+        );
         obj = this.scrapeList(
           $,
-          $(element).find(selectorInfo.base),
+          selectorInfo.base != ""
+            ? $(element).find(selectorInfo.base)
+            : element,
           selectorInfo.selectors
         );
       } else if (selectorInfo.type === "node-text") {
@@ -61,7 +70,12 @@ class ScraperService {
       for (let key in objectSelectors) {
         let selectorInfo = objectSelectors[key];
         if (selectorInfo.type === "text") {
-          obj[key] = this.scrapeText($, $(element).find(selectorInfo.base));
+          obj[key] = this.scrapeText(
+            $,
+            selectorInfo.base != ""
+              ? $(element).find(selectorInfo.base)
+              : element
+          );
         } else if (selectorInfo.type === "img") {
           obj[key] = this.scrapeImage(
             $,
@@ -78,7 +92,9 @@ class ScraperService {
         } else if (selectorInfo.type === "list") {
           obj[key] = this.scrapeList(
             $,
-            $(element).find(selectorInfo.base).children(),
+            selectorInfo.base != ""
+              ? $(element).find(selectorInfo.base)
+              : element,
             selectorInfo.selectors,
             true
           );
@@ -115,12 +131,8 @@ class ScraperService {
     }
   };
 
-  scrapeSimpleText = ($, element) => {
-    return $(element).text();
-  };
-
   scrapeText = ($, element) => {
-    return $(element).text();
+    return $(element).text().replace(/\n/g, "");
   };
 
   scrapeNodeText = ($, element, base) => {
@@ -140,7 +152,7 @@ class ScraperService {
     }
   };
 
-  async specificScrape(task) {
+  async scrape(task) {
     console.log("task", task);
     const returnObject = {};
 
@@ -192,33 +204,6 @@ class ScraperService {
       }
       returnObject[attributename] = selector;
     }
-
-    const scrapedDataJSON = JSON.stringify(returnObject);
-    return scrapedDataJSON;
-  }
-
-  async elementScrape(task) {
-    console.log("task", task);
-    const returnObject = {};
-
-    const axiosResponse = await axios.request({
-      method: "GET",
-      url: task.config.url,
-      headers: task.config.headers
-        ? {
-            Cookie: task.config.headers.cookie,
-            "Content-Type": task.config.headers.content_type,
-            "User-Agent": task.config.headers.user_agent,
-          }
-        : {
-            "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-          },
-    });
-
-    const $ = cheerio.load(axiosResponse.data);
-
-    console.log($(task.elements[0]).text());
 
     const scrapedDataJSON = JSON.stringify(returnObject);
     return scrapedDataJSON;

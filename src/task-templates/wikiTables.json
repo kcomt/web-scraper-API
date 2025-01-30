@@ -1,0 +1,42 @@
+{
+  "config": {
+    "url": "https://en.wikipedia.org/wiki/List_of_presidents_of_the_United_States",
+    "headers": {
+      "cookie": "lc-main=es_ES",
+      "content_type": "text/html; charset=UTF-8",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+    }
+  },
+  "data": {
+    "tables": {
+      "type": "list",
+      "base": "table.wikitable",
+      "selectors": {
+        "type": "object",
+        "base": "tbody",
+        "selectors": {
+          "header": {
+            "type": "list",
+            "base": "th",
+            "selectors": {
+              "type": "text",
+              "base": ""
+            }
+          },
+          "body": {
+            "type": "list",
+            "base": "tr",
+            "selectors": {
+              "type": "list",
+              "base": "td",
+              "selectors": {
+                "type": "text",
+                "base": ""
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
