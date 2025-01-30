@@ -1,0 +1,58 @@
+{
+  "config": {
+    "url": "https://www.imdb.com/search/title/?genres=comedy",
+    "headers": {
+      "cookie": "lc-main=en_US",
+      "content_type": "text/html; charset=UTF-8",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+    }
+  },
+  "data": {
+    "movies": {
+      "type": "list",
+      "base": "li.ipc-metadata-list-summary-item",
+      "selectors": {
+        "type": "object",
+        "base": "sc-74bf520e-3 ",
+        "selectors": {
+          "title": {
+            "type": "text",
+            "base": "h3.ipc-title__text"
+          },
+          "meta-data": {
+            "type": "list",
+            "base": "div.sc-b189961a-7",
+            "selectors": {
+              "type": "text",
+              "base": "span.sc-b189961a-8"
+            }
+          },
+          "imdbRating": {
+            "type": "node-text",
+            "base": "span.ipc-rating-star",
+            "node": 2
+          },
+          "metascore": {
+            "type": "text",
+            "base": "span.bcQdDJ.metacritic-score-box"
+          },
+          "plot": {
+            "type": "text",
+            "base": "div.dli-plot-container"
+          },
+          "image": {
+            "type": "img",
+            "base": "a.ipc-lockup-overlay ",
+            "srcType": "href"
+          }
+        }
+      }
+    },
+
+    "image": {
+      "type": "img",
+      "base": "a.ipc-btn",
+      "srcType": "href"
+    }
+  }
+}
