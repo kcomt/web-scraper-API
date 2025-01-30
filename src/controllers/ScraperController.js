@@ -8,7 +8,7 @@ module.exports = {
     scraperService
       .scrape(req.body)
       .then((response) => {
-        res.json({ data: JSON.parse(response) });
+        res.json(JSON.parse(response));
       })
       .catch((error) => {
         console.log(error);
