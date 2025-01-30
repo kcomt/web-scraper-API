@@ -16,6 +16,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
-app.use("/", scrapeRoutes);
+app.use("/.netlify/functions/server", scrapeRoutes);
 
 module.exports.handler = serverless(app);
