@@ -13,46 +13,31 @@ class ScraperService {
   scrapeList = ($, base, objSelector, bool) => {
     let selector = [];
     $(base).each((index, element) => {
-      if (bool) {
-        //console.log("index", index, base, objSelector, $(element).html());
-        $(element).each((index2) => {
-          //console.log("index2", $(element).text());
-        });
-      }
-
       let obj = {};
       let selectorInfo = objSelector;
       if (selectorInfo.type === "text") {
-        //console.log("goes here 1", $(element));
-
         obj = this.scrapeText($, element);
       } else if (selectorInfo.type === "img") {
         obj = this.scrapeImage(
           $,
           element,
           selectorInfo.base,
-          selectorInfo.srcType
+          selectorInfo.srcType,
         );
       } else if (selectorInfo.type === "object") {
         obj = this.scrapeObject(
           $,
           element,
           selectorInfo.base,
-          selectorInfo.selectors
+          selectorInfo.selectors,
         );
       } else if (selectorInfo.type === "list") {
-        console.log(
-          "index: ",
-          index,
-          " selectorInfo.base: ",
-          selectorInfo.base
-        );
         obj = this.scrapeList(
           $,
           selectorInfo.base != ""
             ? $(element).find(selectorInfo.base)
             : element,
-          selectorInfo.selectors
+          selectorInfo.selectors,
         );
       } else if (selectorInfo.type === "node-text") {
         obj = this.scrapeNodeText($, element, selectorInfo.base);
@@ -66,7 +51,6 @@ class ScraperService {
   scrapeObject = ($, element, base, objectSelectors) => {
     if (element) {
       let obj = {};
-      console.log("base", objectSelectors);
       for (let key in objectSelectors) {
         let selectorInfo = objectSelectors[key];
         if (selectorInfo.type === "text") {
@@ -74,20 +58,20 @@ class ScraperService {
             $,
             selectorInfo.base != ""
               ? $(element).find(selectorInfo.base)
-              : element
+              : element,
           );
         } else if (selectorInfo.type === "img") {
           obj[key] = this.scrapeImage(
             $,
             selectorInfo.base,
-            selectorInfo.srcType
+            selectorInfo.srcType,
           );
         } else if (selectorInfo.type === "object") {
           obj[key] = this.scrapeObject(
             $,
             element,
             base,
-            selectorInfo.selectors
+            selectorInfo.selectors,
           );
         } else if (selectorInfo.type === "list") {
           obj[key] = this.scrapeList(
@@ -96,7 +80,7 @@ class ScraperService {
               ? $(element).find(selectorInfo.base)
               : element,
             selectorInfo.selectors,
-            true
+            true,
           );
         } else if (selectorInfo.type === "node-text") {
           obj[key] = this.scrapeNodeText($, element, selectorInfo.base);
@@ -113,7 +97,7 @@ class ScraperService {
           obj[key] = this.scrapeImage(
             $,
             selectorInfo.base,
-            selectorInfo.srcType
+            selectorInfo.srcType,
           );
         } else if (selectorInfo.type === "object") {
           obj[key] = this.scrapeObject($, false, base, selectorInfo.selectors);
@@ -121,7 +105,7 @@ class ScraperService {
           obj[key] = this.scrapeList(
             $,
             selectorInfo.base,
-            selectorInfo.selectors
+            selectorInfo.selectors,
           );
         } else if (selectorInfo.type === "node-text") {
           obj[key] = this.scrapeNodeText($, $(base), selectorInfo.base);
@@ -153,7 +137,6 @@ class ScraperService {
   };
 
   async scrape(task) {
-    console.log("task", task);
     const returnObject = {};
 
     const axiosResponse = await axios.request({
@@ -178,26 +161,26 @@ class ScraperService {
       if (task.data[attributename]["type"] == "text") {
         selector = this.scrapeText($, task.data[attributename].base);
       } else if (task.data[attributename]["type"] == "node-text") {
-        obj[key] = this.scrapeNodeText($, task.data[attributename]["base"]);
+        selector = this.scrapeNodeText($, task.data[attributename].base);
       } else if (task.data[attributename]["type"] == "list") {
         selector = this.scrapeList(
           $,
           task.data[attributename]["base"],
           task.data[attributename]["selectors"],
-          true
+          true,
         );
       } else if (task.data[attributename]["type"] == "object") {
         selector = this.scrapeObject(
           $,
           false,
           task.data[attributename]["base"],
-          task.data[attributename]["selectors"]
+          task.data[attributename]["selectors"],
         );
       } else if (task.data[attributename]["type"] == "img") {
         selector = this.scrapeImage(
           $,
           task.data[attributename]["base"],
-          task.data[attributename]["srcType"]
+          task.data[attributename]["srcType"],
         );
       } else {
         selector = "";

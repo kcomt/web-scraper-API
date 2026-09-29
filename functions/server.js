@@ -6,13 +6,7 @@ const scrapeRoutes = require("../src/routes/scrapeRoutes");
 const app = express();
 
 // Middleware
-const corsOptions = {
-  origin: "https://rapidapi.com",
-  methods: "GET,POST",
-  allowedHeaders: ["x-api-key"],
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // Routes

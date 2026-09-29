@@ -7,13 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-const corsOptions = {
-  origin: "https://rapidapi.com", // Allow only RapidAPI
-  methods: "GET,POST",
-  allowedHeaders: ["x-rapidapi-key"],
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // Routes

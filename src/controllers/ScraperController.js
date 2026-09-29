@@ -4,14 +4,13 @@ const scraperService = new ScraperService();
 
 module.exports = {
   scrape: (req, res) => {
-    console.log("scrape request", req.body);
     scraperService
       .scrape(req.body)
       .then((response) => {
         res.json(JSON.parse(response));
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        res.status(500).json({ error: "Failed to scrape the requested page." });
       });
   },
 };
